@@ -8,7 +8,7 @@ Room::Room():private_nh("~")
 
     sub_pose = nh.subscribe("roomba/odometry",10,&Room::pose_callback,this);
 
-    pub_twist = nh.advertise<geometry_msgs::Twist>("/roomba/comtrol",1);
+    pub_twist = nh.advertise<geometry_msgs::Twist>("/roomba/control",1);
 
     longsize_ = 0;
 
@@ -27,14 +27,10 @@ void Room::roomba()
     time += dt;
     //theta += v.angular.z;
     v.cntl.linear.x = 0.1;
+    printf("%f\n", v.cntl.linear.x);
     if(longsize_>=kyori && !(theta >= 2*M_PI)) {
         v.cntl.linear.x = 0;
-        v.cntl.angular.z =M_PI;
-        /*
-        if(theta <= 3.8*M_PI/N){
-            v.angular.z = 1;
-        }
-        */
+        v.cntl.angular.z =M_PI/10;
         Room::theta += dt*v.cntl.angular.z;
         if(theta >= 2*M_PI){
             v.cntl.linear.x = 0.1;
