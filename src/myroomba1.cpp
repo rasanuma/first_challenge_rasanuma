@@ -12,7 +12,7 @@ Room::Room():private_nh("~")
 
     longsize_ = 0;
 
-    kyori = 10;
+    kyori = 1;
 }
 
 void Room::pose_callback(const nav_msgs::Odometry::ConstPtr &msg)
@@ -38,6 +38,7 @@ void Room::roomba()
             //theta=0;
         }
     }
+    v.mode = 11;
     //printf("%f\n", theta);
     pub_twist.publish(v);
 }
