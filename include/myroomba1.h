@@ -5,6 +5,8 @@
 #include "nav_msgs/Odometry.h"
 #include "geometry_msgs/Twist.h"
 #include "roomba_500driver_meiji/RoombaCtrl.h"
+#include "tf/tf.h"
+
 class Room
 {
 public:
