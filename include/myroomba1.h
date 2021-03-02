@@ -34,6 +34,7 @@ private:
    ros::NodeHandle nh;
    ros::NodeHandle private_nh;
    ros::Subscriber sub_pose;
+   ros::Subscriber sub_range;
    ros::Publisher pub_twist;
    nav_msgs::Odometry now_pose;
    sensor_msgs::LaserScan ranges;

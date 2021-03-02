@@ -8,6 +8,8 @@ Room::Room():private_nh("~")
 
     sub_pose = nh.subscribe("roomba/odometry",10,&Room::pose_callback,this);
 
+    sub_range = nh.subscribe("/scan",10,&Room::ranges_callback,this);
+
     pub_twist = nh.advertise<roomba_500driver_meiji::RoombaCtrl>("/roomba/control",1);
 
     longsize_ = 0;
@@ -27,6 +29,7 @@ void Room::ranges_callback(const sensor_msgs::LaserScan::ConstPtr &msg)
 
 void Room::roomba()
 {
+    int check;
     double roll = 0;
     double pitch = 0;
     double yaw =0;
@@ -36,15 +39,14 @@ void Room::roomba()
 
     v.cntl.linear.x = 0.2;
     //printf("%f\n", v.cntl.linear.x);
-    if((ranges.ranges[540])<=stop_distance) {
-        v.cntl.linear.x = 0;
-    }
     if(longsize_>=distance) {
         if(-0.1<=theta&&theta <= -0.01) {
+            check = 0;
             v.cntl.linear.x = 0.2;
             v.cntl.angular.z = 0;
         }
         else {
+            check = 1;
             v.cntl.linear.x = 0;
             v.cntl.angular.z =0.2;
             tf::Quaternion quat(now_pose.pose.pose.orientation.x,now_pose.pose.pose.orientation.y,now_pose.pose.pose.orientation.z,now_pose.pose.pose.orientation.w);
@@ -54,8 +56,15 @@ void Room::roomba()
             theta = float(yaw);
         }
     }
+    if(ranges.ranges.size()>0) {
+            printf("%f\n", ranges.ranges[ranges.ranges.size()/2]);
+        if((ranges.ranges[ranges.ranges.size()/2])<=stop_distance && check != 1) {
+            v.cntl.linear.x = 0;
+            longsize_ = 0;
+        }
+    }
     v.mode = 11;
-    //printf("%f\n", theta);
+     //printf("%f\n", theta);
 pub_twist.publish(v);
 }
 
