@@ -22,8 +22,11 @@ private:
    float longsize_;
    float dt;
    float theta=0;
-   float kyori;
+   float distance;
    float time=0.0;
+   double roll=0;
+   double pitch=0;
+   double yaw=0;
 
    ros::NodeHandle nh;
    ros::NodeHandle private_nh;

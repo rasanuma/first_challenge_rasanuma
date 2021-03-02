@@ -11,8 +11,7 @@ Room::Room():private_nh("~")
     pub_twist = nh.advertise<roomba_500driver_meiji::RoombaCtrl>("/roomba/control",1);
 
     longsize_ = 0;
-
-    kyori = 1;
+    distance = 1;
 }
 
 void Room::pose_callback(const nav_msgs::Odometry::ConstPtr &msg)
@@ -31,13 +30,15 @@ void Room::roomba()
     //theta += v.angular.z;
     v.cntl.linear.x = 0.1;
     //printf("%f\n", v.cntl.linear.x);
-    if(longsize_>=kyori && !(theta >= 2*M_PI)) {
+    if(longsize_>=distance && !(-0.1<=theta <= -0.01)) {
         v.cntl.linear.x = 0;
+        v.cntl.angular.z =0.1;
         tf::Quaternion quat(now_pose.pose.pose.orientation.x,now_pose.pose.pose.orientation.y,now_pose.pose.pose.orientation.z,now_pose.pose.pose.orientation.w);
         tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);
         //v.cntl.angular.z =M_PI/10;
         //Room::theta += dt*v.cntl.angular.z;
-        if(theta >= 2*M_PI){
+        theta = yaw;
+        if(-0.1 <= theta <= -0.01){
             v.cntl.linear.x = 0.1;
             //time=0;
             //theta=0;
