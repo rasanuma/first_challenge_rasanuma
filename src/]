@@ -34,19 +34,20 @@ void Room::roomba()
     roomba_500driver_meiji::RoombaCtrl v;
     time += dt;
 
-    v.cntl.linear.x = 0.2;
+    v.cntl.linear.x = 0.1;
     //printf("%f\n", v.cntl.linear.x);
-    if((ranges.ranges[540])<=stop_distance) {
+    if(ranges<=stop_distance) {
         v.cntl.linear.x = 0;
+        break;
     }
     if(longsize_>=distance) {
         if(-0.1<=theta&&theta <= -0.01) {
-            v.cntl.linear.x = 0.2;
+            v.cntl.linear.x = 0.1;
             v.cntl.angular.z = 0;
         }
         else {
             v.cntl.linear.x = 0;
-            v.cntl.angular.z =0.2;
+            v.cntl.angular.z =0.1;
             tf::Quaternion quat(now_pose.pose.pose.orientation.x,now_pose.pose.pose.orientation.y,now_pose.pose.pose.orientation.z,now_pose.pose.pose.orientation.w);
             tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);
         //v.cntl.angular.z =M_PI/10;
